@@ -11,6 +11,8 @@ import springbook.user.domain.User;
 import java.sql.SQLException;
 
 public class UserDaoTest {
+
+
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         UserDao dao = context.getBean("userDao", UserDao.class);
@@ -26,13 +28,20 @@ public class UserDaoTest {
         
         User searchUser = new User();
         searchUser = dao.get("whiteship");
+        if(!searchUser.getName().equals(addUser.getName())){
+            System.out.println("테스트 실패 (name)");
+        }else if(!searchUser.getPassword().equals(addUser.getPassword())){
+            System.out.println("테스트 실패 (password)");
+        }else{
+            System.out.println("조회 테스트 성공");
+        }
         System.out.println("search whiteship 이름 : " + searchUser.getName());
         System.out.println("search whiteship 비밀번호 : " + searchUser.getPassword());
 
         System.out.println(searchUser.getId() + " 조회 성공");
         
 
-        // 동일 오브젝트 확인
+/*        // 동일 오브젝트 확인
         DaoFactory factory = new DaoFactory();
         UserDao dao1 = factory.userDao();
         UserDao dao2 = factory.userDao();
@@ -45,7 +54,7 @@ public class UserDaoTest {
         UserDao dao4 = context.getBean("userDao", UserDao.class);
 
         System.out.println(dao3);
-        System.out.println(dao4);
+        System.out.println(dao4);*/
 
     }
 }
