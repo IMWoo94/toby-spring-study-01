@@ -6,16 +6,22 @@
 >
     <bean id="DConnectionMaker" class="springbook.user.dao.DConnectionMaker"/>
     <bean id="NConnectionMaker" class="springbook.user.dao.NConnectionMaker"/>
+
+
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://localhost:3306/tobyspring?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=Asia/Seoul"/>
         <property name="username" value="toby"/>
         <property name="password" value="spring"/>
-
-
     </bean>
+    <!--<bean id="jdbcContext" class="springbook.user.dao.JdbcContext">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>-->
     <bean id="userDao" class="springbook.user.dao.UserDao">
         <property name="dataSource" ref="dataSource"></property>
+       <!--<property name="jdbcContext" ref="jdbcContext"></property>-->
     </bean>
+
+
 
 </beans>
