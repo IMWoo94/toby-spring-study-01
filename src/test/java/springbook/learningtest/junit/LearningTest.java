@@ -55,5 +55,6 @@ public class LearningTest {
         assertThrows(NoSuchBeanDefinitionException.class, () -> {
             context.getBean("unknown", UserDao.class);
         });
+
     }
 }
