@@ -43,4 +43,35 @@ public class JdbcContext {
             }
         }
     }
+
+    public void executeSql(final String sql) throws SQLException{
+        workWithStatementStrategy(new StatementStrategy() {
+            @Override
+            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+                PreparedStatement ps;
+                ps = c.prepareStatement(sql);
+                return ps;
+            }
+        });
+    }
+
+    public void executeSqlValues(final String sql, Object ... values) throws SQLException{
+        workWithStatementStrategy(new StatementStrategy() {
+            @Override
+            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+                PreparedStatement ps = c.prepareStatement(sql);
+
+                for(int i = 0; i < values.length; i++){
+                    ps.setObject(i+1, values[i]);
+                }
+//                ps.setString(1, user.getId());
+//                ps.setString(2, user.getName());
+//                ps.setString(3, user.getPassword());
+
+                return ps;
+            }
+        });
+    }
+
+
 }
