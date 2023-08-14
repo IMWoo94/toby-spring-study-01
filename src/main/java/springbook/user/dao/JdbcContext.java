@@ -1,5 +1,7 @@
 package springbook.user.dao;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
