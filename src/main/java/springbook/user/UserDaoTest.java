@@ -8,7 +8,10 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import springbook.user.dao.*;
 import springbook.user.domain.User;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDaoTest {
 
@@ -39,6 +42,13 @@ public class UserDaoTest {
         System.out.println("search whiteship 비밀번호 : " + searchUser.getPassword());
 
         System.out.println(searchUser.getId() + " 조회 성공");
+
+        System.out.println("user count = " + dao.getCount());
+
+        List<User> userList = dao.getAll();
+        for(User temp : userList) {
+            System.out.println("user 정보 : " + temp.getId() + " / " + temp.getName() + " / " + temp.getPassword());
+        }
         
 
 /*        // 동일 오브젝트 확인
@@ -55,6 +65,7 @@ public class UserDaoTest {
 
         System.out.println(dao3);
         System.out.println(dao4);*/
+
 
     }
 }
