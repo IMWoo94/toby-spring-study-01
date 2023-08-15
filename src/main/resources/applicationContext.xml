@@ -27,6 +27,10 @@
     <bean id="userLevelUpgradePolicy" class="springbook.user.service.UserService">
         <property name="userDao" ref="userDao"></property>
         <property name="transactionManager" ref="transactionManager"></property>
+        <property name="mailSender" ref="mailSender"></property>
+    </bean>
+    <bean id="mailSender" class="springbook.user.service.DummyMailSender">
+<!--        <property name="host" value="mail.sever.com"></property>-->
     </bean>
 
 

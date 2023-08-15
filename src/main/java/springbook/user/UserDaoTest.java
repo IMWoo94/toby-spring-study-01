@@ -25,6 +25,7 @@ public class UserDaoTest {
         addUser.setLevel(Level.BASIC);
         addUser.setLogin(50);
         addUser.setRecommend(30);
+        addUser.setEmail("dlrldyd1002@gmail.com");
 
         dao.add(addUser);
 
