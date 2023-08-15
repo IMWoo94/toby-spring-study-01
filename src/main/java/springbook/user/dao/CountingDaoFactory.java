@@ -5,14 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 
 @Configuration
 public class CountingDaoFactory {
 
     @Bean
-    public UserDao userDao(){
-        UserDao dao = new UserDao();
+    public UserDaoJdbc userDao(){
+        UserDaoJdbc dao = new UserDaoJdbc();
         dao.setDataSource(dataSource());
         return dao;
     }
