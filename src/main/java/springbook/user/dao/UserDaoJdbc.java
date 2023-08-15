@@ -4,6 +4,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 import springbook.user.exception.DuplicateUserIdException;
 
@@ -22,6 +23,9 @@ public class UserDaoJdbc implements UserDao{
             user.setId(rs.getString("id"));
             user.setName(rs.getString("name"));
             user.setPassword(rs.getString("password"));
+            user.setLevel(Level.valueOf(rs.getInt("level")));
+            user.setLogin(rs.getInt("login"));
+            user.setRecommend(rs.getInt("recommend"));
             return user;
         }
     };
@@ -32,10 +36,10 @@ public class UserDaoJdbc implements UserDao{
     }
 
     @Override
-    public void add(User user){
+    public int add(User user){
 //    public void add(User user) throws DuplicateKeyException {
 //        try {
-            this.jdbcTemplate.update("insert into users (id, name, password) values(?,?,?)", user.getId(), user.getName(), user.getPassword());
+            return this.jdbcTemplate.update("insert into users (id, name, password, level, login, recommend) values(?,?,?,?,?,?)", user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
 //        }catch(DuplicateKeyException e){
 //            //throw new DuplicateUserIdException(e);
 //            throw e;
@@ -53,14 +57,9 @@ public class UserDaoJdbc implements UserDao{
         return this.jdbcTemplate.query("select * from users order by id", this.userMapper);
     }
 
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
-        Connection conn = null;
-        return conn;
-    }
-
     @Override
-    public void deleteAll() {
-        this.jdbcTemplate.update("delete from users");
+    public int deleteAll() {
+        return this.jdbcTemplate.update("delete from users");
     }
 
     @Override
@@ -78,6 +77,18 @@ public class UserDaoJdbc implements UserDao{
 //            }
 //        });
         return this.jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
+    }
+
+    @Override
+    public int update(User user) {
+        return this.jdbcTemplate.update("update users set name = ? , password = ? , level = ? , login = ? ," +
+        "recommend = ? where id = ?", user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
+    }
+
+
+    public Connection getConnection() throws ClassNotFoundException, SQLException {
+        Connection conn = null;
+        return conn;
     }
 
     public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException{

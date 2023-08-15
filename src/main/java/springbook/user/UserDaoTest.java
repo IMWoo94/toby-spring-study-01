@@ -3,6 +3,7 @@ package springbook.user;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import springbook.user.dao.*;
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 import java.sql.SQLException;
@@ -15,12 +16,17 @@ public class UserDaoTest {
         ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         UserDaoJdbc dao = context.getBean("userDao", UserDaoJdbc.class);
 
+        dao.deleteAll();
+
         User addUser = new User();
         addUser.setId("whiteship");
         addUser.setName("백기선");
         addUser.setPassword("spring");
+        addUser.setLevel(Level.BASIC);
+        addUser.setLogin(50);
+        addUser.setRecommend(30);
 
-        //dao.add(addUser);
+        dao.add(addUser);
 
         System.out.println(addUser.getId() + " 등록 성공");
         
