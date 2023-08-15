@@ -53,9 +53,9 @@ class UserDaoTestTest {
 
 /*        DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost:3306/tobyspring?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul","toby","spring",true);
         dao.setDataSource(dataSource);*/
-        user1 = new User("gyumee","박성철","springno1", Level.BASIC, 1, 0);
-        user2 = new User("leegw700","이길원","springno2", Level.SILVER, 55, 10);
-        user3 = new User("bumjin","박범진","springno3", Level.GOLD, 100, 40);
+        user1 = new User("gyumee","박성철","springno1", Level.BASIC, 1, 0, "dlrldyd1002@gamil.com");
+        user2 = new User("leegw700","이길원","springno2", Level.SILVER, 55, 10,"dlrldyd1002@gamil.com");
+        user3 = new User("bumjin","박범진","springno3", Level.GOLD, 100, 40,"dlrldyd1002@gamil.com");
     }
 
     @Test
@@ -146,6 +146,7 @@ class UserDaoTestTest {
         assertThat(origin.getLevel(), is(user.getLevel()));
         assertThat(origin.getLogin(), is(user.getLogin()));
         assertThat(origin.getRecommend(), is(user.getRecommend()));
+        assertThat(origin.getEmail(), is(user.getEmail()));
     }
 
     @Test
@@ -191,6 +192,7 @@ class UserDaoTestTest {
         user1.setLevel(Level.GOLD);
         user1.setLogin(1000);
         user1.setRecommend(999);
+        user1.setEmail("dlrldyd1002@gamil.com");
         int result = dao.update(user1);
 
         // 변경되는 값이 1개
