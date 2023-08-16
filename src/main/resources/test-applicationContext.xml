@@ -17,14 +17,16 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
-    <bean id="UserService" class="springbook.user.service.UserService">
-        <property name="userDao" ref="userDao"></property>
+    <bean id="userService" class="springbook.user.service.UserServiceTx">
+        <property name="userService" ref="userServiceImpl"></property>
         <property name="transactionManager" ref="transactionManager"></property>
-        <property name="mailSender" ref="mailSender"></property>
     </bean>
     <bean id="mailSender" class="springbook.user.service.MockMailSender">
-<!--    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">-->
-<!--        <property name="host" value="smtp.gmail.com"></property>-->
-<!--        <property name="port" value="587"></property>-->
+        <!--        <property name="host" value="mail.sever.com"></property>-->
+    </bean>
+
+    <bean id="userServiceImpl" class="springbook.user.service.UserServiceImpl">
+        <property name="userDao" ref="userDao"></property>
+        <property name="mailSender" ref="mailSender"></property>
     </bean>
 </beans>

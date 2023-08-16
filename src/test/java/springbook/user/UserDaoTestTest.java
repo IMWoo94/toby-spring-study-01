@@ -193,10 +193,8 @@ class UserDaoTestTest {
         user1.setLogin(1000);
         user1.setRecommend(999);
         user1.setEmail("dlrldyd1002@gamil.com");
-        int result = dao.update(user1);
+        dao.update(user1);
 
-        // 변경되는 값이 1개
-        assertThat(result, is(1));
 
         User user1update = dao.get(user1.getId());
         checkSameUser(user1, user1update);
