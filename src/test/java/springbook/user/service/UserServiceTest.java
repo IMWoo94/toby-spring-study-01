@@ -17,7 +17,9 @@ import springbook.user.dao.MockUserDao;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
+import springbook.user.handler.TransactionHandler;
 
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -69,7 +71,6 @@ class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     public void upgradeLevels() throws Exception{
         UserServiceImpl userServiceImpl = new UserServiceImpl();
 
@@ -178,14 +179,16 @@ class UserServiceTest {
     }
 
     @Test
+    @DirtiesContext
     public void upgradeAllOrNothing() throws Exception {
-        UserServiceImpl testUserService = new TestUserService(users.get(3).getId());
+        TestUserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
         testUserService.setMailSender(this.mailSender);
 
-        UserServiceTx txUserService = new UserServiceTx();
-        txUserService.setTransactionManager(transactionManager);
-        txUserService.setUserService(testUserService);
+        TxProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", TxProxyFactoryBean.class);
+        txProxyFactoryBean.setTarget(testUserService);
+
+        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 
         userDao.deleteAll();
 
