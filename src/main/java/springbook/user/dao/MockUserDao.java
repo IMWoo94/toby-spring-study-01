@@ -25,6 +25,7 @@ public class MockUserDao implements UserDao{
 
     @Override
     public void update(User user) {
+        System.out.println("MockUser update method");
         updated.add(user);
     }
 
