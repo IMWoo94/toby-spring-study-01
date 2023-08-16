@@ -14,23 +14,23 @@
         <property name="username" value="toby"/>
         <property name="password" value="spring"/>
     </bean>
-    <!--<bean id="jdbcContext" class="springbook.user.dao.JdbcContext">
-        <property name="dataSource" ref="dataSource"></property>
-    </bean>-->
     <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"></property>
-       <!--<property name="jdbcContext" ref="jdbcContext"></property>-->
     </bean>
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
-    <bean id="userLevelUpgradePolicy" class="springbook.user.service.UserService">
-        <property name="userDao" ref="userDao"></property>
+    <bean id="userService" class="springbook.user.service.UserServiceTx">
+        <property name="userService" ref="userServiceImpl"></property>
         <property name="transactionManager" ref="transactionManager"></property>
-        <property name="mailSender" ref="mailSender"></property>
     </bean>
     <bean id="mailSender" class="springbook.user.service.DummyMailSender">
 <!--        <property name="host" value="mail.sever.com"></property>-->
+    </bean>
+
+    <bean id="userServiceImpl" class="springbook.user.service.UserServiceImpl">
+        <property name="userDao" ref="userDao"></property>
+        <property name="mailSender" ref="mailSender"></property>
     </bean>
 
 

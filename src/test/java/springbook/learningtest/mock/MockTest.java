@@ -8,14 +8,16 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
+import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static springbook.user.service.UserService.*;
+import static org.mockito.Mockito.*;
+import static springbook.user.service.UserServiceImpl.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -44,6 +46,11 @@ public class MockTest {
         assertThat(userMock.getLogin(), is(0));
 
         System.out.println(userMock.getId());
+
+        // 스터빙을 해주는 경우
+        when(userMock.getId()).thenReturn("lee");
+        System.out.println(userMock.getId());
+        assertThat(userMock.getId(), is(notNullValue()));
     }
 
     @Test
@@ -52,6 +59,14 @@ public class MockTest {
         assertThat(userSpy.getLogin(), is(80));
 
         System.out.println(userSpy.getId());
+    }
+
+    @Test
+    void mockTest(){
+        UserDao mockUserDao = mock(UserDao.class);
+
+        when(mockUserDao.getAll()).thenReturn(new ArrayList<>());
+        assertThat(mockUserDao.getAll().size(), is(0));
     }
 
 
