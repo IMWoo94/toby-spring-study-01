@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class DeleteAllStatement implements StatementStrategy{
+public class DeleteAllStatement implements StatementStrategy {
 
-    @Override
-    public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-        PreparedStatement ps;
-        ps = c.prepareStatement("delete from users");
-        return ps;
-    }
+	@Override
+	public PreparedStatement makePreparedStatement(Connection conn) throws SQLException {
+		PreparedStatement ps;
+		ps = conn.prepareStatement("delete from users");
+		return ps;
+	}
 }

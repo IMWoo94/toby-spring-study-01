@@ -6,10 +6,9 @@ import java.sql.SQLException;
 
 public class UserDaoDeleteAll extends UserDaoJdbc {
 
-
-    protected PreparedStatement makeStatement(Connection c) throws SQLException {
-        PreparedStatement ps;
-        ps = c.prepareStatement("delete from users");
-        return ps;
-    }
+	protected PreparedStatement makeStatement(Connection conn) throws SQLException {
+		PreparedStatement ps;
+		ps = conn.prepareStatement("delete from users");
+		return ps;
+	}
 }
