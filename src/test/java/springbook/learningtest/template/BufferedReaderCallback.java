@@ -5,5 +5,5 @@ import java.io.IOException;
 
 public interface BufferedReaderCallback {
 
-    Integer doSomethingWithReader(BufferedReader br) throws IOException;
+	Integer doSomethingWithReader(BufferedReader br) throws IOException;
 }
