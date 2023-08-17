@@ -1,16 +1,19 @@
 package springbook.user.dao;
 
-import springbook.user.domain.User;
-
 import java.util.List;
 
+import springbook.user.domain.User;
+
 public interface UserDao {
-    void add(User user);
-    User get(String id);
+	void add(User user);
 
-    List<User> getAll();
-    void deleteAll();
-    int getCount();
+	User get(String id);
 
-    void update(User user);
+	List<User> getAll();
+
+	void deleteAll();
+
+	int getCount();
+
+	void update(User user);
 }

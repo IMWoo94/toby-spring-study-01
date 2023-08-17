@@ -167,9 +167,9 @@ class UserServiceTest {
 		assertThat(userUpdate.getLevel(), is(level));
 	}
 
-	private void checkLevelUpgrade(User user, boolean b) {
+	private void checkLevelUpgrade(User user, boolean bool) {
 		User userUpdate = userDao.get(user.getId());
-		if (b) {
+		if (bool) {
 			assertThat(userUpdate.getLevel(), is(user.getLevel().nextLevel()));
 		} else {
 			assertThat(userUpdate.getLevel(), is(user.getLevel()));
@@ -213,8 +213,9 @@ class UserServiceTest {
 
 		@Override
 		public void upgradeLevel(User user) {
-			if (user.getId().equals(this.id))
+			if (user.getId().equals(this.id)) {
 				throw new TestUserServiceException();
+			}
 			super.upgradeLevel(user);
 		}
 	}
