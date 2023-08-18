@@ -8,6 +8,8 @@ import java.lang.reflect.Proxy;
 
 import org.junit.jupiter.api.Test;
 
+import springbook.user.handler.UppercaseHandler;
+
 public class ReflectionTest {
 
 	@Test
