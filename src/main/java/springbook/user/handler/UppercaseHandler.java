@@ -1,4 +1,4 @@
-package springbook.learningtest.jdk;
+package springbook.user.handler;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

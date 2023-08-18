@@ -10,7 +10,7 @@ import static springbook.user.service.UserServiceImpl.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +28,7 @@ import springbook.user.dao.MockUserDao;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
+import springbook.user.factorybean.TxProxyFactoryBean;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
@@ -35,7 +36,8 @@ import springbook.user.domain.User;
 class UserServiceTest {
 
 	@Autowired
-	UserServiceImpl userServiceImpl;
+	UserService userService;
+
 	@Autowired
 	UserDao userDao;
 
@@ -50,7 +52,7 @@ class UserServiceTest {
 
 	List<User> users;
 
-	@BeforeAll
+	@BeforeEach
 	public void setUp() {
 		users = Arrays.asList(
 			new User("bumjin", "박범진", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER - 1, 0, "dlrldyd1002@gamil.com"),
@@ -65,8 +67,8 @@ class UserServiceTest {
 	@Test
 	public void bean() {
 		//assertThat(userService, is(context.getBean("userService", UserService.class)));
-		assertNotNull(userServiceImpl);
-		assertThat(userServiceImpl, is(notNullValue()));
+		assertNotNull(userService);
+		assertThat(userService, is(notNullValue()));
 	}
 
 	@Test
@@ -151,8 +153,8 @@ class UserServiceTest {
 		User userWithLevel = users.get(4);
 		User userWithoutLevel = users.get(0);
 
-		userServiceImpl.add(userWithLevel);
-		userServiceImpl.add(userWithoutLevel);
+		userService.add(userWithLevel);
+		userService.add(userWithoutLevel);
 
 		User userWithLevelRead = userDao.get(userWithLevel.getId());
 		User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
@@ -213,6 +215,7 @@ class UserServiceTest {
 
 		@Override
 		public void upgradeLevel(User user) {
+			System.out.println("TestUserService upgradeLevel method");
 			if (user.getId().equals(this.id)) {
 				throw new TestUserServiceException();
 			}

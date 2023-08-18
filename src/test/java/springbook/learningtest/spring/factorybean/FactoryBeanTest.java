@@ -10,6 +10,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import springbook.user.factorybean.Message;
+import springbook.user.factorybean.MessageFactoryBean;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "/FactoryBeanTest-context.xml")
 public class FactoryBeanTest {

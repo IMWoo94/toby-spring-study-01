@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import springbook.user.dao.UserDaoJdbc;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
+@Transactional
 public class UserDaoTest {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
