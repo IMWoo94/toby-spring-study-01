@@ -2,11 +2,11 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xis="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-       xis:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xis:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd"
 >
-    <bean id="DConnectionMaker" class="springbook.user.dao.DConnectionMaker"/>
-    <bean id="NConnectionMaker" class="springbook.user.dao.NConnectionMaker"/>
-
+    <!--    <bean id="DConnectionMaker" class="springbook.user.dao.DConnectionMaker"/>-->
+    <!--    <bean id="NConnectionMaker" class="springbook.user.dao.NConnectionMaker"/>-->
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
@@ -15,12 +15,15 @@
         <property name="username" value="toby"/>
         <property name="password" value="spring"/>
     </bean>
+
     <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
+
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
+
     <bean id="mailSender" class="springbook.user.service.DummyMailSender">
         <!--        <property name="host" value="mail.sever.com"></property>-->
     </bean>
@@ -29,15 +32,21 @@
         <property name="userDao" ref="userDao"></property>
         <property name="mailSender" ref="mailSender"></property>
     </bean>
-    <bean id="transactionAdvice" class="springbook.user.service.TransactionAdvice">
-        <property name="transactionManager" ref="transactionManager"></property>
-    </bean>
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean>
-    <bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserServiceImpl" parent="userService">
-    </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
+    <bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserServiceImpl"
+          parent="userService"/>
+
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
 
     <aop:config>
-        <aop:pointcut id="transactionPointcut" expression="execution(* *..*ServiceImpl.upgrade*(..))"/>
+        <aop:pointcut id="transactionPointcut" expression="bean(*Service)"/>
         <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointcut"></aop:advisor>
     </aop:config>
 </beans>

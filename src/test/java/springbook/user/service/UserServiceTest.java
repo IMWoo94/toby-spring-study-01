@@ -16,11 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import springbook.user.dao.MockUserDao;
 import springbook.user.dao.UserDao;
@@ -208,6 +211,14 @@ class UserServiceTest {
 			}
 			super.upgradeLevel(user);
 		}
+
+		@Override
+		public List<User> getAll() {
+			for (User user : super.getAll()) {
+				super.update(user);
+			}
+			return null;
+		}
 	}
 
 	static class TestUserServiceException extends RuntimeException {
@@ -218,6 +229,30 @@ class UserServiceTest {
 	public void advisorAutoProxyCreator() {
 		System.out.println(testUserService.getClass());
 		System.out.println(userService.getClass());
+	}
+
+	@Test
+	public void readOnlyTransactionAttribute() {
+		assertThrows(TransientDataAccessResourceException.class, () -> {
+			testUserService.getAll();
+		});
+	}
+
+	@Test
+	public void transactionSync() {
+		DefaultTransactionDefinition txDefintion = new DefaultTransactionDefinition();
+		TransactionStatus txStatus = transactionManager.getTransaction(txDefintion);
+
+		userService.deleteAll();
+		assertThat(userDao.getCount(), is(0));
+
+		userService.add(users.get(0));
+		userService.add(users.get(1));
+		assertThat(userDao.getCount(), is(2));
+
+		transactionManager.rollback(txStatus);
+
+		assertThat(userDao.getCount(), is(0));
 	}
 
 }
