@@ -16,6 +16,10 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '1.2.0.RELEASE'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
     implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+    implementation group: 'aspectj', name: 'aspectjrt', version: '1.5.3'
+    implementation group: 'org.aspectj', name: 'aspectjtools', version: '1.8.5'
+    runtimeOnly group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.5'
+
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
@@ -23,6 +27,7 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.mockito:mockito-core:3.3.3'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.3.3'
+
 
 }
 

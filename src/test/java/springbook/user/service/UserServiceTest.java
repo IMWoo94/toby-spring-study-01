@@ -12,15 +12,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -32,11 +29,12 @@ import springbook.user.domain.User;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceTest {
 
 	@Autowired
 	UserService userService;
+	@Autowired
+	UserService testUserService;
 
 	@Autowired
 	UserDao userDao;
@@ -179,17 +177,7 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DirtiesContext
 	public void upgradeAllOrNothing() throws Exception {
-		TestUserService testUserService = new TestUserService(users.get(3).getId());
-		testUserService.setUserDao(this.userDao);
-		testUserService.setMailSender(this.mailSender);
-
-		ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
-		txProxyFactoryBean.setTarget(testUserService);
-
-		UserService txUserService = (UserService)txProxyFactoryBean.getObject();
-
 		userDao.deleteAll();
 
 		for (User user : users) {
@@ -197,7 +185,8 @@ class UserServiceTest {
 		}
 
 		try {
-			txUserService.upgradeLevels();
+			System.out.println(testUserService.getClass());
+			testUserService.upgradeLevels();
 			fail("TestUserServiceException expected");
 		} catch (TestUserServiceException e) {
 
@@ -206,16 +195,14 @@ class UserServiceTest {
 		checkLevelUpgrade(users.get(1), false);
 	}
 
-	static class TestUserService extends UserServiceImpl {
-		private String id;
-
-		private TestUserService(String id) {
-			this.id = id;
-		}
+	// 포인트 컷의 클래스 필터에 선정되도록 이름 변경
+	static class TestUserServiceImpl extends UserServiceImpl {
+		// 테스트 픽쳐스의 users(3)의 id 값을 고정
+		private String id = "madnite1";
 
 		@Override
 		public void upgradeLevel(User user) {
-			System.out.println("TestUserService upgradeLevel method");
+			System.out.println("TestUserServiceImpl upgradeLevel method");
 			if (user.getId().equals(this.id)) {
 				throw new TestUserServiceException();
 			}
@@ -225,6 +212,12 @@ class UserServiceTest {
 
 	static class TestUserServiceException extends RuntimeException {
 
+	}
+
+	@Test
+	public void advisorAutoProxyCreator() {
+		System.out.println(testUserService.getClass());
+		System.out.println(userService.getClass());
 	}
 
 }
