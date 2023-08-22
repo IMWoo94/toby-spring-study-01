@@ -5,8 +5,6 @@
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
        xis:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 >
-    <!--    <bean id="DConnectionMaker" class="springbook.user.dao.DConnectionMaker"/>-->
-    <!--    <bean id="NConnectionMaker" class="springbook.user.dao.NConnectionMaker"/>-->
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
@@ -21,24 +19,19 @@
         <property name="sqlService" ref="sqlService"></property>
     </bean>
 
-    <bean id="sqlService" class="springbook.user.sqlservice.DefaultSqlService">
-        <!--        <property name="sqlReader" ref="sqlReader"></property>-->
-        <!--        <property name="sqlRegistry" ref="sqlRegistry"></property>-->
+    <bean id="sqlService" class="springbook.user.sqlservice.OxmSqlService">
+        <property name="unmarshaller" ref="unmarshaller"></property>
+        <property name="sqlmap" value="classpath:/sqlmap.xml"></property>
     </bean>
-
-    <!--    <bean id="sqlReader" class="springbook.user.sqlservice.JaxbXmlSqlReader">-->
-    <!--        <property name="sqlmapFile" value="/sqlmap.xml"></property>-->
-    <!--    </bean>-->
-
-    <!--    <bean id="sqlRegistry" class="springbook.user.sqlservice.HashMapSqlRegistry">-->
-    <!--    </bean>-->
+    <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="contextPath" value="springbook.user.sqlservice.jaxb"></property>
+    </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
 
     <bean id="mailSender" class="springbook.user.service.DummyMailSender">
-        <!--        <property name="host" value="mail.sever.com"></property>-->
     </bean>
 
     <bean id="userService" class="springbook.user.service.UserServiceImpl">
@@ -47,9 +40,6 @@
     </bean>
 
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
-
-    <!--    <bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserServiceImpl"-->
-    <!--          parent="userService"/>-->
 
     <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
         <tx:attributes>
