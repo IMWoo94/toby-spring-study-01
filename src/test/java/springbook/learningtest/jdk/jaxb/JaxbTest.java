@@ -27,7 +27,7 @@ public class JaxbTest {
 		// 마샬링 -> 바인딩 오브젝트를 XML문서로 변환하는 것
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		Sqlmap sqlmap = (Sqlmap)unmarshaller.unmarshal(getClass().getResourceAsStream(
-			"/sqlmap.xml"));
+			"/sqlmapBase.xml"));
 
 		List<SqlType> sqlList = sqlmap.getSql();
 
