@@ -16,10 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -27,15 +29,16 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import springbook.TestApplicationContext;
+import springbook.TestAppContext;
+import springbook.user.AppContext;
 import springbook.user.dao.MockUserDao;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestApplicationContext.class)
-// @ContextConfiguration(locations = "/test-applicationContext.xml")
+@ContextConfiguration(classes = {AppContext.class, TestAppContext.class})
+@ActiveProfiles("test")
 public class UserServiceTest {
 
 	@Autowired
@@ -269,6 +272,16 @@ public class UserServiceTest {
 		transactionManager.rollback(txStatus);
 
 		assertThat(userDao.getCount(), is(0));
+	}
+
+	@Autowired
+	DefaultListableBeanFactory bf;
+
+	@Test
+	public void beans() {
+		for (String n : bf.getBeanDefinitionNames()) {
+			System.out.println(n + " \t " + bf.getBean(n).getClass().getName());
+		}
 	}
 
 }

@@ -13,29 +13,33 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import springbook.TestApplicationContext;
+import springbook.TestAppContext;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestApplicationContext.class)
-	// @ContextConfiguration(locations = "/test-applicationContext.xml")
+@ContextConfiguration(classes = {AppContext.class, TestAppContext.class})
+@ActiveProfiles("test")
 class UserDaoTestTest {
 
 	@Autowired
 	private ApplicationContext context;
 
 	@Autowired
+	@Qualifier("userDaoJdbc")
 	private UserDao dao;
 
 	@Autowired
@@ -201,6 +205,16 @@ class UserDaoTestTest {
 		User user2same = dao.get(user2.getId());
 		checkSameUser(user2, user2same);
 
+	}
+
+	@Autowired
+	DefaultListableBeanFactory bf;
+
+	@Test
+	public void beans() {
+		for (String n : bf.getBeanDefinitionNames()) {
+			System.out.println(n + " \t " + bf.getBean(n).getClass().getName());
+		}
 	}
 
 }
