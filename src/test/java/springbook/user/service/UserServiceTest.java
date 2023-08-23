@@ -27,14 +27,16 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import springbook.TestApplicationContext;
 import springbook.user.dao.MockUserDao;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = "/test-applicationContext.xml")
-class UserServiceTest {
+@ContextConfiguration(classes = TestApplicationContext.class)
+// @ContextConfiguration(locations = "/test-applicationContext.xml")
+public class UserServiceTest {
 
 	@Autowired
 	UserService userService;
@@ -207,7 +209,7 @@ class UserServiceTest {
 	}
 
 	// 포인트 컷의 클래스 필터에 선정되도록 이름 변경
-	static class TestUserServiceImpl extends UserServiceImpl {
+	public static class TestUserServiceImpl extends UserServiceImpl {
 		// 테스트 픽쳐스의 users(3)의 id 값을 고정
 		private String id = "madnite1";
 
@@ -229,7 +231,7 @@ class UserServiceTest {
 		}
 	}
 
-	static class TestUserServiceException extends RuntimeException {
+	public static class TestUserServiceException extends RuntimeException {
 
 	}
 
