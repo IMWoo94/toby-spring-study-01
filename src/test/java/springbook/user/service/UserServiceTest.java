@@ -10,6 +10,7 @@ import static springbook.user.service.UserServiceImpl.*;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import springbook.user.dao.MockUserDao;
@@ -63,6 +65,11 @@ class UserServiceTest {
 			new User("lee", "이상민", "lee", Level.BRONZE, MIN_LOGCOUNT_FOR_GOLD, 70, "dlrldyd1002@gamil.com"),
 			new User("green", "오민규", "p5", Level.GOLD, 100, Integer.MAX_VALUE, "dlrldyd1002@gamil.com")
 		);
+	}
+
+	@AfterEach
+	public void reset() {
+		userDao.deleteAll();
 	}
 
 	@Test
@@ -148,6 +155,7 @@ class UserServiceTest {
 	}
 
 	@Test
+	@Transactional
 	public void add() {
 		userDao.deleteAll();
 
@@ -233,6 +241,12 @@ class UserServiceTest {
 
 	@Test
 	public void readOnlyTransactionAttribute() {
+		userDao.deleteAll();
+
+		for (User user : users) {
+			userDao.add(user);
+		}
+
 		assertThrows(TransientDataAccessResourceException.class, () -> {
 			testUserService.getAll();
 		});

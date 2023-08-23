@@ -41,11 +41,11 @@ public class XmlSqlService implements SqlService, SqlRegistry, SqlReader {
 	}
 
 	@Override
-	public String getSql(String key) throws SqlRetrievalFialureException {
+	public String getSql(String key) throws SqlRetrievalFailureException {
 		try {
 			return this.sqlRegistry.findSql(key);
 		} catch (SqlNotFoundException e) {
-			throw new SqlRetrievalFialureException(e.getMessage());
+			throw new SqlRetrievalFailureException(e.getMessage());
 		}
 	}
 

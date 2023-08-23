@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xis="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xis="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
-       xis:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xis:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd"
 >
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
@@ -20,8 +21,15 @@
 
     <bean id="sqlService" class="springbook.user.sqlservice.OxmSqlService">
         <property name="unmarshaller" ref="unmarshaller"></property>
-        <property name="sqlmap" value="classpath:../../test/resources/sqlmap.xml"></property>
+        <!--        <property name="sqlmap" value="classpath:/sqlmap.xml"></property>-->
+        <property name="sqlRegistry" ref="sqlRegisrty"></property>
     </bean>
+
+    <!--    <bean id="sqlRegisrty" class="springbook.user.sqlservice.ConcurrentHashMapSqlRegistry">-->
+    <bean id="sqlRegisrty" class="springbook.user.issuetracker.sqlservice.updatable.EmbeddedDbSqlRegistry">
+        <property name="dataSource" ref="embeddedDatabase"></property>
+    </bean>
+    
     <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="contextPath" value="springbook.user.sqlservice.jaxb"></property>
     </bean>
@@ -58,12 +66,14 @@
     <!--            </props>-->
     <!--        </property>-->
     <!--    </bean>-->
-    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="get*" read-only="true"/>
-            <tx:method name="*" read-only="true"/>
-        </tx:attributes>
-    </tx:advice>
+    <!--    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">-->
+    <!--        <tx:attributes>-->
+    <!--            <tx:method name="get*" read-only="true"/>-->
+    <!--            <tx:method name="*"/>-->
+    <!--        </tx:attributes>-->
+    <!--    </tx:advice>-->
+
+    <tx:annotation-driven/>
 
     <!--    <bean id="transactionPointcut" class="springbook.user.service.NameMatchClassMethodPointcut">-->
     <!--        <property name="mappedClassName" value="*ServiceImpl"></property>-->
@@ -76,11 +86,15 @@
     <!--        <property name="advice" ref="transactionAdvice"></property>-->
     <!--        <property name="pointcut" ref="transactionPointcut"></property>-->
     <!--    </bean>-->
-    <aop:config>
-        <aop:pointcut id="transactionPointcut" expression="bean(*Service)"/>
-        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointcut"></aop:advisor>
-    </aop:config>
+    <!--    <aop:config>-->
+    <!--        <aop:pointcut id="transactionPointcut" expression="bean(*Service)"/>-->
+    <!--        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointcut"></aop:advisor>-->
+    <!--    </aop:config>-->
 
     <context:annotation-config/>
+
+    <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
+        <jdbc:script location="classpath:/sqlRegistrySchema.sql"></jdbc:script>
+    </jdbc:embedded-database>
 
 </beans>

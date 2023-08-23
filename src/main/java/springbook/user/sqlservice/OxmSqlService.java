@@ -37,7 +37,7 @@ public class OxmSqlService implements SqlService {
 
 		private static final String DEFAULT_SQLMAP_FILE = "/sqlmap.xml";
 
-		private Resource sqlmap = new ClassPathResource("sqlmap.xml", UserDao.class);
+		private Resource sqlmap = new ClassPathResource("/sqlmap.xml", UserDao.class);
 
 		private Unmarshaller unmarshaller;
 
@@ -72,7 +72,7 @@ public class OxmSqlService implements SqlService {
 	}
 
 	@Override
-	public String getSql(String key) throws SqlRetrievalFialureException {
+	public String getSql(String key) throws SqlRetrievalFailureException {
 		return this.baseSqlService.getSql(key);
 	}
 }

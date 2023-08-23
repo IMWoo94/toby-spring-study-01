@@ -10,10 +10,10 @@ public class SimpleSqlService implements SqlService {
 	}
 
 	@Override
-	public String getSql(String key) throws SqlRetrievalFialureException {
+	public String getSql(String key) throws SqlRetrievalFailureException {
 		String sql = sqlMap.get(key);
 		if (sql == null) {
-			throw new SqlRetrievalFialureException(key + "에 대한 SQL을 찾을 수 없습니다.");
+			throw new SqlRetrievalFailureException(key + "에 대한 SQL을 찾을 수 없습니다.");
 		} else {
 			return sql;
 		}

@@ -8,7 +8,7 @@ import springbook.user.domain.User;
 
 @Transactional
 public interface UserService {
-
+	
 	void add(User user);
 
 	@Transactional(readOnly = true)
